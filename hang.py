@@ -1,5 +1,8 @@
 import random
 import string
+import sys
+import os
+
 
 WORDLIST_FILENAME = "palavras.txt"
 
@@ -11,7 +14,7 @@ def loadWordssmall():
     Depending on the size of the word list, this function may
     take a while to finish.
     """
-    print "Loading word list from file..."
+    print "Loading word list from file..." 
     # inFile: file
     inFile = open(WORDLIST_FILENAME, 'r', 0)
     # line: string
@@ -35,7 +38,14 @@ def isWordGuessed(secretWord, lettersGuessed):
              return False
 
     return True
-    
+
+def txt():
+    if WORDLIST_FILENAME.endswith('.txt'):
+        return True
+    else:    
+        print 'Just txt file'
+        exit()
+
 def getAvailableLetters():
     import string
     # 'abcdefghijklmnopqrstuvwxyz'
@@ -67,16 +77,43 @@ def findGessed(secretWord, lettersGuessed):
     return guessed
 
 def hangman(secretWord):
-    resposta = 0
-    differentsletters = 0
+    try:
+        resposta = 0
+    except NameError:
+        print 'resposta just a number'    
+        sys.exit()
+
+    try:
+        differentsletters = 8
+    except NameError:
+        print 'differentsletters just number'    
+        sys.exit()
+
+
+    try:
+        guesses = 8
+    except NameError:
+        print 'guesses just a number'    
+        sys.exit()
+
     guessed = ''
-    guesses = 8
     lettersGuessed = []
     print 'Welcome to the game, Hangam!'
     print 'I am thinking of a word that is', len(secretWord), ' letters long.'
     print '-------------'   
-    resposta = input('Do you want to know how many differents letters? 1 : yes | 0 : no: ')
-    
+
+    try:
+             resposta = input('Do you want to know how many differents letters? 1 : yes | 0 : no: ')
+
+    except NameError:
+        print 'just number'    
+        sys.exit()  
+
+    while resposta != 1 and resposta != 0:
+        print '\nPlease Just 0 or 1'
+        resposta = input('\nDo you want to know how many differents letters? 1 : yes | 0 : no: ')
+        
+ 
     if resposta == 1:
            differentsletters = difletters(secretWord)  
            print 'Number of differents letters:',differentsletters
@@ -89,8 +126,16 @@ def hangman(secretWord):
                 if letter in lettersGuessed:
                     available = available.replace(letter, '')
 
-            print 'Available letters', available
-            letter = raw_input('Please guess a letter: ')
+            print 'Available letters', available 
+            try:
+                letter = raw_input('Please guess a letter: ')
+            except KeyboardInterrupt:
+                print'Just letters'
+                sys.exit()
+
+            while letter.isalpha() == False:
+                letter = raw_input('Please just letter: ')
+
             if letter in lettersGuessed:        
                 guessed = findGessed(secretWord, lettersGuessed)  
                 print 'Oops! You have already guessed that letter: ', guessed
